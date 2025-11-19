@@ -172,8 +172,13 @@ static char head_to_body(char c) {
   Returns cur_row otherwise.
 */
 static unsigned int get_next_row(unsigned int cur_row, char c) {
-  // TODO: Implement this function.
-  return cur_row;
+  if (c == 'v' || c == 'S' || c == 's') {
+    return cur_row + 1;
+  } else if (c == '^' || c == 'w' || c == 'W') {
+    return cur_row - 1;
+  } else {
+    return cur_row;
+  }
 }
 
 /*
@@ -182,8 +187,13 @@ static unsigned int get_next_row(unsigned int cur_row, char c) {
   Returns cur_col otherwise.
 */
 static unsigned int get_next_col(unsigned int cur_col, char c) {
-  // TODO: Implement this function.
-  return cur_col;
+  if (c == '>' || c == 'd' || c == 'D') {
+    return cur_col + 1;
+  } else if (c == '<' || c == 'a' || c == 'A') {
+    return cur_col - 1;
+  } else {
+    return cur_col;
+  }
 }
 
 /*
