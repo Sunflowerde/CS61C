@@ -227,8 +227,15 @@ static char next_square(game_t *game, unsigned int snum) {
   Note that this function ignores food, walls, and snake bodies when moving the head.
 */
 static void update_head(game_t *game, unsigned int snum) {
-  // TODO: Implement this function.
-  return;
+  unsigned int head_row = game->snakes[snum].head_row;
+  unsigned int head_col = game->snakes[snum].head_col;
+  unsigned int next_row = get_next_row(head_row, get_board_at(game, head_row, head_col));
+  unsigned int next_col = get_next_col(head_col, get_board_at(game, head_row, head_col));
+  set_board_at(game, next_row, next_col, get_board_at(game, head_row, head_col));
+  set_board_at(game, head_row, head_col, head_to_body(get_board_at(game, head_row, head_col)));
+  /* 最后必须更新 snake 的其他成员变量，因为他们也是 snake 的一部分，也需要进行比较 */
+  game->snakes[snum].head_col = next_col;
+  game->snakes[snum].head_row = next_row;
 }
 
 /*
