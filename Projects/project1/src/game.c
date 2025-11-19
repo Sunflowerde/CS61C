@@ -103,8 +103,10 @@ static void set_board_at(game_t *game, unsigned int row, unsigned int col, char 
   Returns false otherwise.
 */
 static bool is_tail(char c) {
-  // TODO: Implement this function.
-  return true;
+  if (c == 'w' || c == 'a' || c == 's' || c == 'd') {
+    return true;
+  }
+  return false;
 }
 
 /*
@@ -113,8 +115,10 @@ static bool is_tail(char c) {
   Returns false otherwise.
 */
 static bool is_head(char c) {
-  // TODO: Implement this function.
-  return true;
+  if (c == 'W' || c == 'A' || c == 'S' || c == 'D' || c == 'x') {
+    return true;
+  }
+  return false;
 }
 
 /*
@@ -122,8 +126,10 @@ static bool is_head(char c) {
   The snake consists of these characters: "wasd^<v>WASDx"
 */
 static bool is_snake(char c) {
-  // TODO: Implement this function.
-  return true;
+  if (is_tail(c) || is_head(c) || c == '^' || c == '<' || c == 'v' || c == '>') {
+    return true;
+  }
+  return false;
 }
 
 /*
@@ -132,8 +138,15 @@ static bool is_snake(char c) {
   tail ("wasd").
 */
 static char body_to_tail(char c) {
-  // TODO: Implement this function.
-  return '?';
+  if (c == '^') {
+    return 'w';
+  } else if (c == '<') {
+    return 'a';
+  } else if (c == '>') {
+    return 'd';
+  } else if (c == 'v') {
+    return 's';
+  }
 }
 
 /*
@@ -142,8 +155,15 @@ static char body_to_tail(char c) {
   body ("^<v>").
 */
 static char head_to_body(char c) {
-  // TODO: Implement this function.
-  return '?';
+  if (c == 'W') {
+    return '^';
+  } else if (c == 'A') {
+    return '<';
+  } else if (c == 'S') {
+    return 'v';
+  } else if (c == 'D') {
+    return '>';
+  }
 }
 
 /*
