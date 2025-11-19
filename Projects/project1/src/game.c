@@ -23,8 +23,30 @@ static void update_head(game_t *game, unsigned int snum);
 
 /* Task 1 */
 game_t *create_default_game() {
-  // TODO: Implement this function.
-  return NULL;
+  game_t* game = malloc(sizeof(game_t));
+  game->num_rows = 18;
+  game->board = malloc(sizeof(char*) * game->num_rows);
+  /* 注意，在 C 语言中字符串，类似 "abc" 是放在 .rodata 上的，无权修改，如果修改会引发 segmentationn fault */
+  /* 所以我们必须给 game->board 的每一行分配内存，然后再把 .rodata 上的内容复制进 heap 上，确保可以修改 */
+  for (int i = 0; i < game->num_rows; ++i) {
+    game->board[i] = malloc(22 * sizeof(char));
+  }
+  /* 注意 malloc 时分配的内存应该要包括 \n 与 \0 */
+  strcpy(game->board[0], "####################\n");
+  strcpy(game->board[1], "#                  #\n");
+  strcpy(game->board[2], "# d>D    *         #\n");
+  strcpy(game->board[17], "####################\n");
+  for (int i = 3; i <= 16; ++i) {
+    strcpy(game->board[i], "#                  #\n");
+  }
+  game->num_snakes = 1;
+  game->snakes = malloc(sizeof(snake_t));
+  game->snakes->tail_row = 2;
+  game->snakes->tail_col = 2;
+  game->snakes->head_row = 2;
+  game->snakes->head_col = 4;
+  game->snakes->live = true;
+  return game;
 }
 
 /* Task 2 */
