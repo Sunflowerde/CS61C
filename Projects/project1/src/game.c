@@ -147,6 +147,7 @@ static char body_to_tail(char c) {
   } else if (c == 'v') {
     return 's';
   }
+  return '0';
 }
 
 /*
@@ -164,6 +165,7 @@ static char head_to_body(char c) {
   } else if (c == 'D') {
     return '>';
   }
+  return '0';
 }
 
 /*
@@ -204,8 +206,13 @@ static unsigned int get_next_col(unsigned int cur_col, char c) {
   This function should not modify anything.
 */
 static char next_square(game_t *game, unsigned int snum) {
-  // TODO: Implement this function.
-  return '?';
+  /* snakes 是一个 snake_t 的数组，所以需要传入 snum 来操控每一条蛇 */
+  /* snakes[snum] 是一个 snake_t 结构体，所以访问其中元素不能用 ->，而要用 . */
+  unsigned int head_row = game->snakes[snum].head_row;
+  unsigned int head_col = game->snakes[snum].head_col;
+  unsigned int next_row = get_next_row(head_row, get_board_at(game, head_row, head_col));
+  unsigned int next_col = get_next_col(head_col, get_board_at(game, head_row, head_col));
+  return get_board_at(game, next_row, next_col);
 }
 
 /*
