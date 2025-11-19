@@ -32,6 +32,7 @@ game_t *create_default_game() {
     game->board[i] = malloc(22 * sizeof(char));
   }
   /* 注意 malloc 时分配的内存应该要包括 \n 与 \0 */
+  /* 重要的是，在 C 语言中，string 末尾自带 \0，不用显式添加 */
   strcpy(game->board[0], "####################\n");
   strcpy(game->board[1], "#                  #\n");
   strcpy(game->board[2], "# d>D    *         #\n");
@@ -51,7 +52,12 @@ game_t *create_default_game() {
 
 /* Task 2 */
 void free_game(game_t *game) {
-  // TODO: Implement this function.
+  free(game->snakes);
+  for (int i = 0; i < game->num_rows; ++i) {
+    free(game->board[i]);
+  }
+  free(game->board);
+  free(game);
   return;
 }
 
