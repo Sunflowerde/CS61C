@@ -63,7 +63,11 @@ void free_game(game_t *game) {
 
 /* Task 3 */
 void print_board(game_t *game, FILE *fp) {
-  // TODO: Implement this function.
+  char** board = game->board;
+  for (int i = 0; i < game->num_rows; ++i) {
+    /* 通过查 man，我们知道了 fprintf 的参数，其中第一个是 stream，表示需要将内容 print 到函数参数给出的 fp 中 */
+    fprintf(fp, "%s", board[i]);
+  }
   return;
 }
 
