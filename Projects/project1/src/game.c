@@ -286,16 +286,33 @@ void update_game(game_t *game, int (*add_food)(game_t *game)) {
 
 /* Task 5.1 */
 char *read_line(FILE *fp) {
-  // TODO: Implement this function.
-  return NULL;
+  char* line = malloc(1024);
+  if (fgets(line, 1024, fp) == NULL) {
+    /* 如果 fgets 失败，要记得 free */
+    free(line);
+    return NULL;
+  }
+  size_t len = strlen(line);
+  line = realloc(line, len + 1);
+  return line;
 }
 
 /* Task 5.2 */
 game_t *load_board(FILE *fp) {
-  // TODO: Implement this function.
-  return NULL;
+  char* line;
+  unsigned int id = 0;
+  game_t* game = malloc(sizeof(game_t));
+  game->num_snakes = 0;
+  game->snakes = NULL;
+  game->board = malloc(sizeof(char*) * 1024);
+  while ((line = read_line(fp)) != NULL) {
+    game->board[id] = line;
+    id++;
+  }
+  game->num_rows = id;
+  game->board = realloc(game->board, sizeof(char*) * game->num_rows);
+  return game;
 }
-
 /*
   Task 6.1
 
