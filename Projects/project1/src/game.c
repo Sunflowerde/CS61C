@@ -286,8 +286,8 @@ void update_game(game_t *game, int (*add_food)(game_t *game)) {
 
 /* Task 5.1 */
 char *read_line(FILE *fp) {
-  char* line = malloc(1024);
-  if (fgets(line, 1024, fp) == NULL) {
+  char* line = malloc(100005);
+  if (fgets(line, 100005, fp) == NULL) {
     /* 如果 fgets 失败，要记得 free */
     free(line);
     return NULL;
@@ -304,8 +304,8 @@ game_t *load_board(FILE *fp) {
   game_t* game = malloc(sizeof(game_t));
   game->num_snakes = 0;
   game->snakes = NULL;
-  game->board = malloc(sizeof(char*) * 1024);
-  while ((line = read_line(fp)) != NULL) {
+  game->board = malloc(sizeof(char*) * 100005);
+  while ((line = read_line(fp)) != NULL) {  
     game->board[id] = line;
     id++;
   }
@@ -322,33 +322,34 @@ game_t *load_board(FILE *fp) {
   fill in the head row and col in the struct.
 */
 static void find_head(game_t *game, unsigned int snum) {
-  unsigned int num_rows = game->num_rows;
-  unsigned int num_cols = (unsigned int)strlen(game->board[0]);
-  /* 需要更新的是第 snum 的蛇，而不是发现的第一个蛇，所以需要先统计发现的是第几条蛇 */
-  unsigned int id = 0;
-  for (unsigned int row = 0; row < num_rows; row++) {
-    for (unsigned int col = 0; col < num_cols - 1; col++) {
-      if (is_head(get_board_at(game, row, col))) {
-        if (id == snum) {
-          game->snakes[snum].head_row = row;
-          game->snakes[snum].head_col = col;
-          return;
-        }
-        id++;
-      }
+  unsigned int row = game->snakes[snum].tail_row;
+  unsigned int col = game->snakes[snum].tail_col;
+  /* 我们需要做的是根据路径，追踪到尾巴，而不是遍历，容易使 snum 与头错位 */
+  while (!is_head(get_board_at(game, row, col))) {
+    char c = get_board_at(game, row, col);
+    if (c == 'w' || c == '^') {
+      row--;
+    } else if (c == 'a' || c == '<') {
+      col--;
+    } else if (c == 's' || c == 'v') {
+      row++;
+    } else if (c == 'd' || c == '>') {
+      col++;
     }
   }
-  return;
+  game->snakes[snum].head_row = row;
+  game->snakes[snum].head_col = col;
 }
 
 /* Task 6.2 */
 game_t *initialize_snakes(game_t *game) {
-  game->snakes = malloc(sizeof(snake_t) * 1024);
+  game->snakes = malloc(sizeof(snake_t) * 100005);
   unsigned int snum = 0;
   unsigned int num_rows = game->num_rows;
-  unsigned int num_cols = (unsigned int)strlen(game->board[0]);
+  /* 注意这里每一行的长度不一定相同，不能直接计算 */
   for (unsigned int row = 0; row < num_rows; row++) {
-    for (unsigned int col = 0; col < num_cols - 1; col++) {
+    unsigned int num_cols = strlen(game->board[row]);
+    for (unsigned int col = 0; col < num_cols - 1; ++col) {
       if (is_tail(get_board_at(game, row, col))) {
         game->snakes[snum].tail_row = row;
         game->snakes[snum].tail_col = col;
