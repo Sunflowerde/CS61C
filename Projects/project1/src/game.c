@@ -274,11 +274,6 @@ void update_game(game_t *game, int (*add_food)(game_t *game)) {
       update_tail(game, snum);
     } else if (next_char == '*') {
       update_head(game, snum);
-      char next_next_char = next_square(game, snum);
-      if (next_next_char == '#' || is_snake(next_next_char)) {
-        set_board_at(game, game->snakes[snum].head_row, game->snakes[snum].head_col, 'x');
-        game->snakes[snum].live = false;
-      }
       add_food(game);
     }
   }
@@ -348,7 +343,7 @@ game_t *initialize_snakes(game_t *game) {
   unsigned int num_rows = game->num_rows;
   /* 注意这里每一行的长度不一定相同，不能直接计算 */
   for (unsigned int row = 0; row < num_rows; row++) {
-    unsigned int num_cols = strlen(game->board[row]);
+    unsigned int num_cols = (unsigned int)strlen(game->board[row]);
     for (unsigned int col = 0; col < num_cols - 1; ++col) {
       if (is_tail(get_board_at(game, row, col))) {
         game->snakes[snum].tail_row = row;
