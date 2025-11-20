@@ -324,14 +324,21 @@ game_t *load_board(FILE *fp) {
 static void find_head(game_t *game, unsigned int snum) {
   unsigned int num_rows = game->num_rows;
   unsigned int num_cols = (unsigned int)strlen(game->board[0]);
+  /* 需要更新的是第 snum 的蛇，而不是发现的第一个蛇，所以需要先统计发现的是第几条蛇 */
+  unsigned int id = 0;
   for (unsigned int row = 0; row < num_rows; row++) {
-    for (unsigned int col = 0; col < num_cols; col++) {
+    for (unsigned int col = 0; col < num_cols - 1; col++) {
       if (is_head(get_board_at(game, row, col))) {
-        game->snakes[snum].head_row = row;
-        game->snakes[snum].head_col = col;
+        if (id == snum) {
+          game->snakes[snum].head_row = row;
+          game->snakes[snum].head_col = col;
+          return;
+        }
+        id++;
       }
     }
   }
+  return;
 }
 
 /* Task 6.2 */
@@ -341,7 +348,7 @@ game_t *initialize_snakes(game_t *game) {
   unsigned int num_rows = game->num_rows;
   unsigned int num_cols = (unsigned int)strlen(game->board[0]);
   for (unsigned int row = 0; row < num_rows; row++) {
-    for (unsigned int col = 0; col < num_cols; col++) {
+    for (unsigned int col = 0; col < num_cols - 1; col++) {
       if (is_tail(get_board_at(game, row, col))) {
         game->snakes[snum].tail_row = row;
         game->snakes[snum].tail_col = col;
