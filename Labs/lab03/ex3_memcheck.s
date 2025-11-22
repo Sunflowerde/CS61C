@@ -7,7 +7,8 @@ main:
     # Allocate an array of size 10
     li a0 40   # 10 ints, 4 bytes each
     jal malloc # malloc is defined in utils.s
-    mv t0 a0   # the pointer is returned in a0
+    mv t0, a0   # the pointer is returned in a0
+    mv t3, a0 # 为 free 准备参数 
 
     # Fill the array with 0's
     li t1 0  # t1 is the index
@@ -25,5 +26,7 @@ loop:
     blt t1, t2, loop
 
     # Exit the program
+    mv t3, a0
+    jal free
     li a0 0
     jal exit
