@@ -1,5 +1,5 @@
 .data
-n .word 12
+n: .word 12
 
 .text
 main:
