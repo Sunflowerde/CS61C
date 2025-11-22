@@ -27,7 +27,14 @@ main:
 # The return value should be stored in a0
 factorial:
     # YOUR CODE HERE
-
+    addi t0, a0, 0 # store R[a0] in to
+    addi t1, x0, 1 # base = 1
+    addi t2, x0, 1 # i = 1
+loop:
+    mul t1, t1, t2 # mul = base * i
+    addi t2, t2, 1 # i++
+    bge t0, t2, loop
+    addi a0, t1, 0
     # This is how you return from a function. You'll learn more about this later.
     # This should be the last line in your program.
     jr ra
