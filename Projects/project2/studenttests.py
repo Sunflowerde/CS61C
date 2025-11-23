@@ -59,8 +59,12 @@ class TestAbsLoss(unittest.TestCase):
         t.check_scalar("a0", 17)
         # generate the `assembly/TestAbsLoss_test_simple.s` file and run it through venus
         t.execute()
-
-    # Add other test cases if necessary
+    
+    def test_invalid_length(self):
+        t = AssemblyTest(self, "../coverage-src/abs_loss.s")
+        t.input_scalar("a2", -1)
+        t.call("abs_loss")
+        t.execute(code=36)
 
     @classmethod
     def tearDownClass(cls):
@@ -91,31 +95,33 @@ class TestSquaredLoss(unittest.TestCase):
     def test_simple(self):
         # load the test for squared_loss.s
         t = AssemblyTest(self, "../coverage-src/squared_loss.s")
-
-        raise NotImplementedError("TODO")
-
-        # TODO
         # create input arrays in the data section
-        # TODO
+        array0 = t.array([1, 4, 2, 6, 4, 6])
+        array1 = t.array([3, 0, 1, -4, 5, 2])
         # load array addresses into argument registers
-        # TODO
+        t.input_array("a0", array0)
+        t.input_array("a1", array1)
         # load array length into argument register
-        # TODO
+        t.input_scalar("a2", 6)
         # create a result array in the data section (fill values with -1)
-        # TODO
+        array2 = t.array([-1, -1, -1, -1, -1, -1])
         # load result array address into argument register
-        # TODO
+        t.input_array("a3", array2)
         # call the `squared_loss` function
-        # TODO
+        t.call("squared_loss")
         # check that the result array contains the correct output
-        # TODO
+        t.check_array(array2, [4, 16, 1, 100, 1, 15])
         # check that the register a0 contains the correct output
-        # TODO
+        t.check_scalar("a0", 137)
         # generate the `assembly/TestSquaredLoss_test_simple.s` file and run it through venus
-        # TODO
+        t.execute()
 
-    # Add other test cases if neccesary
-
+    def test_invalid_length(self):
+        t = AssemblyTest(self, "../coverage-src/squared_loss.s")
+        t.input_scalar("a2", -1)
+        t.call("squared_loss")
+        t.execute(code=36)
+        
     @classmethod
     def tearDownClass(cls):
         print_coverage("squared_loss.s", verbose=False)
