@@ -37,29 +37,26 @@ class TestAbsLoss(unittest.TestCase):
     def test_simple(self):
         # load the test for abs_loss.s
         t = AssemblyTest(self, "../coverage-src/abs_loss.s")
-
-        raise NotImplementedError("TODO")
-
         # create array0 in the data section
-        # TODO
+        array0 = t.array([0, 1, -1, 3, 4, 5])
         # load address of `array0` into register a0
-        # TODO
+        t.input_array("a0", array0)
         # create array1 in the data section
-        # TODO
+        array1 = t.array([1, 3, 1, -5, 3, 2])
         # load address of `array1` into register a1
-        # TODO
+        t.input_array("a1", array1)
         # set a2 to the length of the array
-        # TODO
+        t.input_scalar("a2", len(array0))
         # create a result array in the data section (fill values with -1)
-        # TODO
+        array2 = t.array([-1, -1, -1, -1, -1, -1])
         # load address of `array2` into register a3
-        # TODO
+        t.input_array("a3", array2)
         # call the `abs_loss` function
-        # TODO
+        t.call("abs_loss")
         # check that the result array contains the correct output
-        # TODO
+        t.check_array(array2, [1, 2, 2, 8, 1, 3])
         # check that the register a0 contains the correct output
-        # TODO
+        t.check_scalar("a0", 17)
         # generate the `assembly/TestAbsLoss_test_simple.s` file and run it through venus
         t.execute()
 
@@ -195,17 +192,25 @@ initialize_zero
 class TestInitializeZero(unittest.TestCase):
     def test_simple(self):
         t = AssemblyTest(self, "../coverage-src/initialize_zero.s")
-
-        raise NotImplementedError("TODO")
-
         # input the length of the desired array
-        # TODO
+        t.input_scalar("a0", 5)
         # call the `initialize_zero` function
-        # TODO
+        t.call("initialize_zero")
         # check that the register a0 contains the correct array (hint: look at the check_array_pointer function in framework.py)
-        # TODO
+        t.check_array_pointer("a0", [0, 0, 0, 0, 0])
         t.execute()
-
+    
+    def test_invalid(self):
+        t = AssemblyTest(self, "../coverage-src/initialize_zero.s")
+        t.input_scalar("a0", -1) 
+        t.call("initialize_zero")
+        t.execute(code=36)
+    
+    def test_malloc_failure(self):
+        t = AssemblyTest(self, "../coverage-src/initialize_zero.s")
+        t.input_scalar("a0", 3)
+        t.call("initialize_zero")
+        t.execute(code=26, fail="malloc")
     # Add other test cases if neccesary
 
     @classmethod
